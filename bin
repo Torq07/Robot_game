@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+require './game.rb'
+
+puts 'Would you like to set field dimension?'
+answer=gets.chomp
+
+game = if answer==/Да|yes/i
+	puts 'Enter x'
+	x=gets.chomp
+	puts 'Enter y'
+	y=gets.chomp
+	Game.new(x,y)
+else
+	Game.new
+end	
+
+loop do 
+	command=gets.chomp
+	start_pattern_command=/(quit|PLACE(?:\W*)(\d+)(?:\W*)(\d+)(?:\W*)(\w+))/i
+	
+	command=nil unless (game.field.current_object || command[start_pattern_command]) 
+
+	case command
+	when /quit/i
+		break
+	when start_pattern_command
+		puts game.place_robot($2.to_i,$3.to_i,$4.upcase)
+	when /MOVE/i 
+		puts game.move
+	when /right/i
+		game.right
+	when /left/i
+		game.left
+	when /report/i
+		puts game.report
+	when /take_robot/i
+		game.take_robot
+	when /\/h(elp)?/i	
+		puts <<-EOF
+	Usage:
+	  PLACE X,Y,F - where
+		X,Y - x,y coordinates
+	  	F - following direction
+	  MOVE - step toward on current dirrection
+	  LEFT - turn left
+	  RIGHT - turn right
+	  REPORT - get current robot report
+	  TAKE_ROBOT - take other robot available on field
+	EOF
+	end	
+end

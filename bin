@@ -26,7 +26,7 @@ loop do
 	when start_pattern_command
 		puts game.place_robot($2.to_i,$3.to_i,$4.upcase)
 	when /MOVE/i 
-		puts game.move
+		game.move
 	when /right/i
 		game.right
 	when /left/i
